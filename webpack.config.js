@@ -50,6 +50,7 @@ module.exports = {
                 ]
             }
         }
+      }
     ]
   },
   resolve: { extensions: ["*", ".js", ".jsx"] },
@@ -62,7 +63,8 @@ module.exports = {
     contentBase: './dist',
     port: 3000,
     publicPath: "http://localhost:3000/dist/",
-    hotOnly: true
+    hotOnly: true,
+    hot:true
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
