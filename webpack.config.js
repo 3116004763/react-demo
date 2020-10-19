@@ -1,9 +1,19 @@
 const path = require("path");
 const webpack = require("webpack");
 const HTMLWebpackPlugin = require('html-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
+
+console.log(process.argv)
+
+let plat
+try {
+    plat = process.argv[4] ? process.argv[4].split('=')[1] : 'vue'
+} catch (error) {
+    plat = 'vue'
+}
 
 module.exports = {
-  entry: "./src/index.js",
+  entry: plat === 'vue' ? "./src/index-vue.js" : "./src/index-react.js",
   mode: "development",
   stats: "errors-only",
   module: {
@@ -12,55 +22,33 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /(node_modules|bower_components)/,
         loader: "babel-loader",
-        options: { presets: ["@babel/env"] }
+        options: { presets: ["@babel/env",'@babel/react'] }
       },
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"]
       },
       {
-        test: /\.(html|ejs)$/,
-        exclude: /node_modules/,
-        loader: 'html-loader',
-        options: {
-            attributes: {
-                list: [
-                  {
-                    tag: 'img',
-                    attribute: 'src',
-                    type: 'src',
-                  },
-                  {
-                    tag: 'link',
-                    attribute: 'href',
-                    type: 'src',
-                    filter: (tag, attribute, attributes) => {
-                      if (!/stylesheet/i.test(attributes.rel)) {
-                        return false;
-                      }
-                      if (
-                        attributes.type &&
-                        attributes.type.trim().toLowerCase() !== 'text/css'
-                      ) {
-                        return false;
-                      }
-                      return true;
-                    },
-                  },
-                ]
-            }
-        }
+        test: /\.vue$/,
+        loader: 'vue-loader',
       }
     ]
   },
-  resolve: { extensions: ["*", ".js", ".jsx"] },
+  resolve: {
+    extensions:["*", ".js", ".jsx",'.vue'] ,
+    alias: { // 路径别名
+      root:path.resolve(__dirname),
+      common: path.resolve(__dirname,'common'),
+      vue$: 'vue/dist/vue.runtime.esm.js', // 相比於 vue.esm.js 小 30% 左右
+    }
+  },
   output: {
     path: path.resolve(__dirname, "dist/"),
     publicPath: "/dist/",
     filename: "bundle.js"
   },
   devServer: {
-    contentBase: './dist',
+    contentBase: path.join(__dirname, "dist"),
     port: 3000,
     publicPath: "http://localhost:3000/dist/",
     hotOnly: true,
@@ -72,6 +60,7 @@ module.exports = {
         filename: 'index.html',  // 默认名 index.html
         template: path.join(__dirname, './template/index.html')
         //inject:false   // 不引入css，js等。默认true
-    })
+    }),
+    new VueLoaderPlugin()
   ]
 };
