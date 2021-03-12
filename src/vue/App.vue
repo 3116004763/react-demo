@@ -1,14 +1,21 @@
 <template>
     <div>
-        <h5>{{$options.name}}</h5>
-        <div>{{name}}</div>
-        <div>{{22}}</div>
+        <A @bb="alertS" :name="name"/>
     </div>
 </template>
 
 <script>
+import A from './cp/A'
 export default {
     name:'testVue',
+    components:{
+        A
+    },
+    methods: {
+        alertS(p){
+            alert(p)
+        }
+    },
     data(){
         return {
             name:113,
@@ -16,7 +23,7 @@ export default {
         }
     },
     mounted(){
-        console.log(this.$options.name)
+        // console.log(this.$options.name)
     }
 }
 </script>

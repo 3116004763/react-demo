@@ -22,7 +22,13 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /(node_modules|bower_components)/,
         loader: "babel-loader",
-        options: { presets: ["@babel/env",'@babel/react'] }
+        // options: { presets: [["@babel/env",{
+        //     "useBuiltIns":"usage",
+        //     "corejs":3,
+        //     "targets":{
+        //         "browsers":">5%"
+        //     }
+        // }],'@babel/react'] }
       },
       {
         test: /\.css$/,
@@ -49,8 +55,8 @@ module.exports = {
   },
   devServer: {
     contentBase: path.join(__dirname, "dist"),
-    port: 3000,
-    publicPath: "http://localhost:3000/dist/",
+    port: 8066,
+    publicPath: "http://localhost:8066/dist/",
     hotOnly: true,
     hot:true
   },
